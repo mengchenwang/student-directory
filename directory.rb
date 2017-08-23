@@ -1,3 +1,5 @@
+@students = []
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
@@ -20,7 +22,6 @@ end
 # ex5. add more info.
 def input_students_more
   # create an empty array
-  students = []
   while true
     # get student info.
     puts "Please create a student record"
@@ -77,12 +78,12 @@ def input_students_more
     puts "What's #{name}'s favourite hobby?"
     hobby = gets.chomp
     # put student info into array
-    students << {name: name, cohort: cohort, country: country, height: height, hobby: hobby}
+    @students << {name: name, cohort: cohort, country: country, height: height, hobby: hobby}
     # ex9. student number
-    if students.count == 1
+    if @students.count == 1
       puts "Now we have 1 student"
     else
-      puts "Now we have #{students.count} students"
+      puts "Now we have #{@students.count} students"
     end
     # answer yes to get another record, no to return array
     puts "Would you like to create another student record? (yes/no)"
@@ -93,7 +94,7 @@ def input_students_more
     end
 
     if more.downcase == "no"
-      return students
+      return @students
     end
   end
 end
@@ -129,10 +130,11 @@ def print_by_cohort(students)
   end
 end
 
-# ex1. with index
-def print(students)
-  students.each_with_index do |student|
-    puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort)"
+def print_students_list
+  @students.each do |student|
+    puts "#{student[:name]} (#{student[:cohort]} cohort) "
+         "Country: #{student[:country]} Height: #{student[:height]} "
+         "Hobby: #{student[:hobby]}"
   end
 end
 
@@ -172,19 +174,45 @@ def print_header
   puts ("-------------".center(line_width))
 end
 
-def print_footer(students)
+def print_footer
   # ex10. check student count
-  if students.count > 1
-    puts "Overall, we have #{students.count} great students"
-  elsif students.count == 1
+  if @students.count > 1
+    puts "Overall, we have #{@students.count} great students"
+  elsif @students.count == 1
     puts "Overall, we have 1 great student"
   end
 end
 
-#nothing happens until we call the methods
-students = input_students_more
-print_header
-print_by_cohort(students)
-# print_initial(students)
-# print(students)
-print_footer(students)
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit" # 9 because we'll be adding more items
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students_more
+    when "2"
+      show_students
+    when "9"
+      exit
+    else
+      puts "I don't know what you mean, try again"
+  end
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
+  end
+end
+
+interactive_menu
